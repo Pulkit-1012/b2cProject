@@ -21,19 +21,22 @@ public class BaseVerification extends BaseEntity{
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "requested_by_user_id")
+    private User requestedByUserId;
 
     @ManyToOne
     @JoinColumn(name = "individual_id")
     private Individual individual;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "offering_type")
     private OfferingType offeringType;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "result")
     private Result result;
 

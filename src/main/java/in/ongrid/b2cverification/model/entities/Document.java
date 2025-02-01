@@ -23,10 +23,12 @@ public class Document {
     @JoinColumn(name = "individual_id")
     private Individual individual;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "doc_type")
     private DocType docType;
 
     public Document() {};
+
 
     public Document(DocType docType) {
         this.docType = docType;

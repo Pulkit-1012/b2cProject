@@ -2,16 +2,23 @@ package in.ongrid.b2cverification.model.entities;
 
 import in.ongrid.b2cverification.model.enums.UserType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,22 +37,21 @@ public class User extends BaseEntity {
     @Column(name = "phone_number")
     private long phoneNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "user_type")
     private UserType userType;
 
 
 
-    //no attribute constructor
-    public User() {};
 
-    public User(String userName, String email, String password, long phoneNumber, UserType userType) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.userType = userType;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(userType.name()));
     }
 
-
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
 }

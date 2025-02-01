@@ -9,13 +9,11 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString
-@Table(name = "pan_verification")
 public class PANVerification extends BaseVerification {
 
-
-    @ManyToOne
-    @JoinColumn(name = "bv_id")
-    private BaseVerification verification;
+    @OneToOne
+    @JoinColumn(name = "pan_doc_document_id")
+    private PANDoc panDoc;
 
 
 

@@ -19,10 +19,10 @@ public class Individual extends BaseEntity {
     @Column(name = "individual_id")
     private long id;
 
-    @Column(name = "individual_name")
+    @Column(name = "individual_name", nullable = false)
     private String individualName;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     private long phoneNumber;
 
     @Column(name = "father_name")
@@ -41,8 +41,8 @@ public class Individual extends BaseEntity {
     private String gender;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "added_by_user_id")
+    private User addedBy;
 
 
 
