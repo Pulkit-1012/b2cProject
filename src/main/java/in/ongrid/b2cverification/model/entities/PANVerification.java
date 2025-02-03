@@ -1,14 +1,14 @@
 package in.ongrid.b2cverification.model.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class PANVerification extends BaseVerification {
 
     @OneToOne
@@ -16,7 +16,5 @@ public class PANVerification extends BaseVerification {
     private PANDoc panDoc;
 
 
-
-    public PANVerification() {};
 
 }

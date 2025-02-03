@@ -4,14 +4,15 @@ import in.ongrid.b2cverification.model.enums.OfferingType;
 import in.ongrid.b2cverification.model.enums.Result;
 import in.ongrid.b2cverification.model.enums.Status;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "base_verification")
 public class BaseVerification extends BaseEntity{
 
@@ -47,7 +48,6 @@ public class BaseVerification extends BaseEntity{
 
 
     //no attribute constructor
-    public BaseVerification() {};
 
     public BaseVerification(OfferingType offeringType, Status status, Result result, String pdfReportUrl) {
         this.offeringType = offeringType;

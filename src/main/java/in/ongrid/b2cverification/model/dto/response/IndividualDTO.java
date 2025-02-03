@@ -1,16 +1,17 @@
-package in.ongrid.b2cverification.model.dto;
+package in.ongrid.b2cverification.model.dto.response;
 
 import lombok.*;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Date;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
-@Data
 @Builder
-public class CreateIndividualRequest {
+@Data
+public class IndividualDTO {
     private String individualName;
     private long phoneNumber;
     private String fatherName;
@@ -18,4 +19,5 @@ public class CreateIndividualRequest {
     private String address;
     private Date dob;
     private String gender;
+
 }

@@ -54,4 +54,8 @@ public class User extends BaseEntity implements UserDetails {
         return email;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
 }

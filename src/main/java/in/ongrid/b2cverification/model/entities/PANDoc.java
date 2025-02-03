@@ -1,12 +1,14 @@
 package in.ongrid.b2cverification.model.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class PANDoc extends Document{
 
 //    @Id
@@ -15,7 +17,6 @@ public class PANDoc extends Document{
 
     private String panNumber;
 
-    public PANDoc() {};
 
 
 }

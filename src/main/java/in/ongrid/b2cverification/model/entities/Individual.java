@@ -1,16 +1,17 @@
 package in.ongrid.b2cverification.model.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
-@Entity
 @Getter
 @Setter
+@Entity
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Individual")
 public class Individual extends BaseEntity {
 
@@ -48,7 +49,6 @@ public class Individual extends BaseEntity {
 
 
     //no attribute constructor
-    public Individual() {};
 
     public Individual( String individualName, long phoneNumber, String fatherName, String motherName, String address, Date dob, String gender) {
         this.individualName = individualName;

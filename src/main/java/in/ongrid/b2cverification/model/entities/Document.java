@@ -2,14 +2,15 @@ package in.ongrid.b2cverification.model.entities;
 
 import in.ongrid.b2cverification.model.enums.DocType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "document")
 public class Document {
 
@@ -27,7 +28,6 @@ public class Document {
     @Column(name = "doc_type")
     private DocType docType;
 
-    public Document() {};
 
 
     public Document(DocType docType) {
