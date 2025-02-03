@@ -2,11 +2,15 @@ package in.ongrid.b2cverification.service.impl;
 
 import in.ongrid.b2cverification.config.JwtService;
 import in.ongrid.b2cverification.dao.UserRepository;
+import in.ongrid.b2cverification.exceptions.BadRequestException;
+import in.ongrid.b2cverification.exceptions.UnauthorizedException;
 import in.ongrid.b2cverification.mappers.UserMapper;
 import in.ongrid.b2cverification.model.dto.CreateUserRequest;
 import in.ongrid.b2cverification.model.dto.response.UserDTO;
+import in.ongrid.b2cverification.model.dto.response.UserUpdateDTO;
 import in.ongrid.b2cverification.model.entities.User;
 import in.ongrid.b2cverification.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,41 +40,28 @@ public class UserServiceImpl implements UserService {
 
 
 
-    //NOT WORKING (ILLEGAL BASE64 URL ERROR) 403forbidden on postman [earlier it was working]
     @Override
     public UserDTO findById(long id, String token) {
-//        String tokenWithoutBearer = token.replace("Bearer ", "").trim();
         String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
-
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//        if (!Objects.equals(emailFromToken, user.getEmail())) {
-//            throw new RuntimeException("Access denied: You can only view your own details.");
-//        }
 
         Optional<User> dbUser = userRepository.findById(id);
 
         if (dbUser.isEmpty() || !Objects.equals(emailFromToken, dbUser.get().getEmail())) {
-            throw new RuntimeException("Unauthorized access or user not found");
+            throw new UnauthorizedException("Access denied you cannot view this user's details!");
         }
 
         return UserMapper.toDTO(dbUser.get());
     }
 
-//    public UserDTO findById(long id) {
-//
-//        Optional<User> dbUser = userRepository.findById(id);
-//
-//
-//
-//        return UserMapper.toDTO(dbUser.get());
-//    }
 
 
 
     @Override
     public User save(CreateUserRequest request) {
-        // Add validations
+        // validations
+//        if(StringUtils.isBlank(request.getEmail())) throw new IllegalArgumentException("Email is required");
+//        else if (StringUtils.isBlank(request.getPassword())) throw new IllegalArgumentException("Password is required");
+//        else if (StringUtils.isBlank(request.getUserName())) throw new IllegalArgumentException("UserName is required");
 
         User user = new User();
         user.setUserType(request.getUserType());
@@ -91,5 +82,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findByEmail(String email, String token) {
         return null;
+    }
+
+    @Override
+    public void updateUser(User user, UserUpdateDTO userUpdateDTO) {
+        if(userUpdateDTO.getUserName() != null) {
+            user.setUserName(userUpdateDTO.getUserName());
+        }
+
+        if(String.valueOf(userUpdateDTO.getPhoneNumber()).length()!= 10) {
+            throw new BadRequestException("Phone number must be 10 digits");
+        }
+        else user.setPhoneNumber(userUpdateDTO.getPhoneNumber());
     }
 }

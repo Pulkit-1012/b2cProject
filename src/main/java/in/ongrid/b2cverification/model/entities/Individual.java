@@ -41,6 +41,9 @@ public class Individual extends BaseEntity {
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "ongrid_individual_id")
+    private long ongridIndividualId;
+
     @ManyToOne
     @JoinColumn(name = "added_by_user_id")
     private User addedBy;
@@ -50,7 +53,7 @@ public class Individual extends BaseEntity {
 
     //no attribute constructor
 
-    public Individual( String individualName, long phoneNumber, String fatherName, String motherName, String address, Date dob, String gender) {
+    public Individual( String individualName, long phoneNumber, String fatherName, String motherName, String address, Date dob, String gender, long ongridIndividualId) {
         this.individualName = individualName;
         this.phoneNumber = phoneNumber;
         this.fatherName = fatherName;
@@ -58,6 +61,7 @@ public class Individual extends BaseEntity {
         this.address = address;
         this.dob = dob;
         this.gender = gender;
+        this.ongridIndividualId = ongridIndividualId;
     }
 
 }

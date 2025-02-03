@@ -1,6 +1,7 @@
 package in.ongrid.b2cverification.service;
 
 import in.ongrid.b2cverification.model.dto.CreateIndividualRequest;
+import in.ongrid.b2cverification.model.dto.OngridIndividualRequestDTO;
 import in.ongrid.b2cverification.model.dto.response.IndividualDTO;
 import in.ongrid.b2cverification.model.entities.Individual;
 
@@ -14,4 +15,8 @@ public interface IndividualService {
     void deleteById(Long id);
 
     IndividualDTO createIndividual(long userID, IndividualDTO individualDTO, String token);
+
+    List<IndividualDTO> getIndividualsByUserId(long userId);
+
+    long callOnGridApi(OngridIndividualRequestDTO ongridIndividualRequestDTO);
 }
