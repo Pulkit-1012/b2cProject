@@ -3,6 +3,7 @@ package in.ongrid.b2cverification.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,29 +21,39 @@ public class Individual extends BaseEntity {
     @Column(name = "individual_id")
     private long id;
 
-    @Column(name = "individual_name", nullable = false)
-    private String individualName;
+    @Column(name = "individual_name")
+    private String name;
 
-    @Column(name = "phone_number", nullable = false)
-    private long phoneNumber;
-
-    @Column(name = "father_name")
-    private String fatherName;
-
-    @Column(name = "mother_name")
-    private String motherName;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "dob")
-    private Date dob;
+    @Column(name = "city")
+    private String city;
 
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "phone_number")
+    private String phone;
+
+    @Column(name = "professionsId")
+    private String professionId;
+
+    @Column(name = "dob")
+    private LocalDate dob;
+
+    @Column(name = "father_name")
+    private String fathersName;
+
+    @Column(name = "hasConsent")
+    private boolean hasConsent;
+
+    @Column(name = "consentText")
+    private String consentText;
+
+    @Column(name = "mother_name")
+    private String mothersName;
+
+
     @Column(name = "ongrid_individual_id")
-    private long ongridIndividualId;
+    private long onGridIndividualId;
 
     @ManyToOne
     @JoinColumn(name = "added_by_user_id")
@@ -53,15 +64,18 @@ public class Individual extends BaseEntity {
 
     //no attribute constructor
 
-    public Individual( String individualName, long phoneNumber, String fatherName, String motherName, String address, Date dob, String gender, long ongridIndividualId) {
-        this.individualName = individualName;
-        this.phoneNumber = phoneNumber;
-        this.fatherName = fatherName;
-        this.motherName = motherName;
-        this.address = address;
-        this.dob = dob;
+    public Individual( String name, String city, String gender, String phone, String professionId, LocalDate dob, String fathersName, boolean hasConsent, String consentText, String mothersName, long onGridIndividualId) {
+        this.name = name;
+        this.city = city;
         this.gender = gender;
-        this.ongridIndividualId = ongridIndividualId;
+        this.phone = phone;
+        this.professionId = professionId;
+        this.dob = dob;
+        this.fathersName = fathersName;
+        this.hasConsent = hasConsent;
+        this.consentText = consentText;
+        this.mothersName = mothersName;
+        this.onGridIndividualId = onGridIndividualId;
     }
 
 }
