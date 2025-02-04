@@ -3,6 +3,7 @@ package in.ongrid.b2cverification.model.dto.response;
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -12,12 +13,16 @@ import java.util.Date;
 @Builder
 @Data
 public class IndividualDTO {
-    private String individualName;
-    private long phoneNumber;
-    private String fatherName;
-    private String motherName;
-    private String address;
-    private Date dob;
+    private String name;
+    private String city;
     private String gender;
+    private String phone;
+    private String professionId;
+    private LocalDate dob;
+    private boolean hasConsent = true;
+    private String consentText;
+    private String fathersName;
+    private String mothersName;
+
 
 }

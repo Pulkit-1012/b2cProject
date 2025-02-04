@@ -9,6 +9,7 @@ import in.ongrid.b2cverification.model.enums.DocType;
 import in.ongrid.b2cverification.model.enums.OfferingType;
 import in.ongrid.b2cverification.model.enums.Status;
 import in.ongrid.b2cverification.service.BaseVerificationService;
+import in.ongrid.b2cverification.service.PANDocService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,21 +17,52 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-public class BaseVerificationController {
+public class BaseVerificationRestController {
 
     private final BaseVerificationService baseVerificationService;
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final IndividualRepository individualRepository;
     private final DocumentRepository documentRepository;
+    private final PANDocService panDocService;
 
-    public BaseVerificationController(BaseVerificationService baseVerificationService, JwtService jwtService, UserRepository userRepository, IndividualRepository individualRepository, DocumentRepository documentRepository) {
+    public BaseVerificationRestController(BaseVerificationService baseVerificationService, JwtService jwtService, UserRepository userRepository, IndividualRepository individualRepository, DocumentRepository documentRepository, PANDocService panDocService) {
         this.baseVerificationService = baseVerificationService;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.individualRepository = individualRepository;
         this.documentRepository = documentRepository;
+        this.panDocService = panDocService;
     }
+
+
+
+
+
+
+//    //saving the pan number //tested - working fine.
+//    @PostMapping("/{userId}/individuals/{individualId}")
+//    public ResponseEntity<String> addPan(@PathVariable long userId, @PathVariable long individualId, @RequestBody String panNumber, @RequestHeader("Authorization") String token) {
+//
+//        String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
+//        Optional<Individual> dbIndividual = individualRepository.findById(individualId);
+//        Optional<User> dbUser = userRepository.findById(userId);
+//
+//        if(dbUser.isEmpty() || !dbUser.get().getEmail().equals(emailFromToken)) {
+//            throw new RuntimeException("User doesn't exist OR Unauthorized access!");
+//        }
+//
+//        if(dbIndividual.isEmpty() || !dbIndividual.get().getAddedBy().equals(dbUser.get())) {
+//            throw new RuntimeException("Individual doesn't exist OR This individual is not owned by the user!");
+//        }
+//
+//        panDocService.savePanDoc(dbIndividual.get(), panNumber);
+//
+//        return ResponseEntity.ok("Pan number added successfully!");
+//    }
+
+
+
 
 
     //dont know if i have written rigth or not

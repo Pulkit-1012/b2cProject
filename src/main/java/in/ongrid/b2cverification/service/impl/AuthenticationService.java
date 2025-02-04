@@ -10,6 +10,7 @@ import in.ongrid.b2cverification.model.entities.BaseEntity;
 import in.ongrid.b2cverification.model.entities.User;
 import in.ongrid.b2cverification.model.enums.UserType;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,8 +28,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
 
+    private void validateRegisterRequest(RegisterRequest registerRequest) {
+        if(StringUtils.isBlank(registerRequest.getUsername())) throw new UsernameNotFoundException("User name is required to create a user account!");
+        else if(StringUtils.isBlank(registerRequest.getPassword())) throw new UsernameNotFoundException("Password is required to create a user account!");
+        else if(StringUtils.isBlank(registerRequest.getEmail())) throw new UsernameNotFoundException("Email is required to create a user account!");
+    }
+
 
     public AuthenticationResponse register(RegisterRequest request) {
+
+        validateRegisterRequest(request);
+
         var user = User.builder()
                 .userName(request.getUsername())
                 .email(request.getEmail())
@@ -42,8 +52,16 @@ public class AuthenticationService {
                 .build();
     }
 
+    private void validateAuthenticationRequest(AuthenticationRequest request) {
+        if(StringUtils.isBlank(request.getEmail())) throw new IllegalArgumentException("Email is required to create a user account!");
+        else if(StringUtils.isBlank(request.getPassword())) throw new IllegalArgumentException("Password is required to create a user account!");
+    }
+
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+
+        validateAuthenticationRequest(request);
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),request.getPassword()
