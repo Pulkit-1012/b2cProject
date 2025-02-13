@@ -19,4 +19,6 @@ public interface IndividualService {
 
     List<IndividualDTO> getIndividualsByUserId(long userId);
 
+    OngridIndividualCreateUpdateDTO onBoardIndividual(long userId, Individual individual, String token);
+
 }

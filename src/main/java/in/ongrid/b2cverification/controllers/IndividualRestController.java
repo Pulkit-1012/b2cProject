@@ -2,12 +2,15 @@ package in.ongrid.b2cverification.controllers;
 
 
 import in.ongrid.b2cverification.dao.IndividualRepository;
+import in.ongrid.b2cverification.model.dto.OngridIndividualCreateUpdateDTO;
 import in.ongrid.b2cverification.model.dto.response.IndividualDTO;
 import in.ongrid.b2cverification.model.entities.Individual;
 import in.ongrid.b2cverification.service.IndividualService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,7 +27,6 @@ public class IndividualRestController {
 
 
 
-    //api not working 403forbidden error
     //creating an individual
     @PostMapping("/{userId}/individuals")
     public ResponseEntity<IndividualDTO> createIndividual(@PathVariable long userId, @RequestBody IndividualDTO individualDTO, @RequestHeader("Authorization") String token) {
@@ -40,4 +42,14 @@ public class IndividualRestController {
         IndividualDTO individualDTO = individualService.findById(userId, individualId, token);
         return ResponseEntity.ok(individualDTO);
     };
+
+
+
+    //on-boarding an individual
+    @PostMapping("/{userId}/individuals/{individualId}/onboard-individual")
+    public ResponseEntity<OngridIndividualCreateUpdateDTO> onBoardIndividual(@PathVariable long userId, @PathVariable long individualId, @RequestHeader("Authorization") String token) {
+        Optional<Individual> individual = individualRepository.findById(individualId);
+        OngridIndividualCreateUpdateDTO ongridIndividualCreateUpdateDTO = individualService.onBoardIndividual(userId, individual.get(), token);
+        return ResponseEntity.ok(ongridIndividualCreateUpdateDTO);
+    }
 }

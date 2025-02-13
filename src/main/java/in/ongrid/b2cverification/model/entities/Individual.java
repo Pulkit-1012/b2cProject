@@ -42,10 +42,10 @@ public class Individual extends BaseEntity {
     @Column(name = "father_name")
     private String fathersName;
 
-    @Column(name = "hasConsent")
+    @Column(name = "has_consent")
     private boolean hasConsent;
 
-    @Column(name = "consentText")
+    @Column(name = "consent_text")
     private String consentText;
 
     @Column(name = "mother_name")

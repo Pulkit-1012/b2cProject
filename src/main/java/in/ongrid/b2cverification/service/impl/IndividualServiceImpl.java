@@ -77,23 +77,20 @@ public class IndividualServiceImpl implements IndividualService {
 //        Individual savedIndividual = individualRepository.save(individual);
 
 
-        //some values from here, rest of the values are hard coded
-        //inserting values into the OngridIndividualCreateUpdateDTO
-        OngridIndividualCreateUpdateDTO ongridIndividualCreateUpdateDTO = new OngridIndividualCreateUpdateDTO();
-        ongridIndividualCreateUpdateDTO.setName(individualDTO.getName());
-        ongridIndividualCreateUpdateDTO.setCity(individualDTO.getCity());
-        ongridIndividualCreateUpdateDTO.setGender(individualDTO.getGender());
-        ongridIndividualCreateUpdateDTO.setPhone(individualDTO.getPhone());
-        ongridIndividualCreateUpdateDTO.setProfessionId(individualDTO.getProfessionId());
-        ongridIndividualCreateUpdateDTO.setDob(dataFormatterService.localDateToString(individualDTO.getDob()));
-        ongridIndividualCreateUpdateDTO.setHasConsent(true);
-        ongridIndividualCreateUpdateDTO.setConsentText(individualDTO.getConsentText());
-        ongridIndividualCreateUpdateDTO.setFathersName(individualDTO.getFathersName());
-
-        //
+//        inserting values into the OngridIndividualCreateUpdateDTO
+//        OngridIndividualCreateUpdateDTO ongridIndividualCreateUpdateDTO = new OngridIndividualCreateUpdateDTO();
+//        ongridIndividualCreateUpdateDTO.setName(individualDTO.getName());
+//        ongridIndividualCreateUpdateDTO.setCity(individualDTO.getCity());
+//        ongridIndividualCreateUpdateDTO.setGender(individualDTO.getGender());
+//        ongridIndividualCreateUpdateDTO.setPhone(individualDTO.getPhone());
+//        ongridIndividualCreateUpdateDTO.setProfessionId(individualDTO.getProfessionId());
+//        ongridIndividualCreateUpdateDTO.setDob(dataFormatterService.localDateToString(individualDTO.getDob()));
+//        ongridIndividualCreateUpdateDTO.setHasConsent(true);
+//        ongridIndividualCreateUpdateDTO.setConsentText(individualDTO.getConsentText());
+//        ongridIndividualCreateUpdateDTO.setFathersName(individualDTO.getFathersName());
 
 
-        individual.setOnGridIndividualId(onGridAPIService.callOnGridApi(ongridIndividualCreateUpdateDTO).getOnGridIndividualId());
+//        individual.setOnGridIndividualId(onGridAPIService.callOnGridApi(ongridIndividualCreateUpdateDTO).getOnGridIndividualId());
 
         //onboard individual to ongrid
         //save ongrid individualid (add a field in the entity)
@@ -120,10 +117,47 @@ public class IndividualServiceImpl implements IndividualService {
 
 
 
+    //method to on-board the individual
+    @Override
+    public OngridIndividualCreateUpdateDTO onBoardIndividual(long userId, Individual individual, String token) {
+
+        OngridIndividualCreateUpdateDTO ongridIndividualCreateUpdateDTO = new OngridIndividualCreateUpdateDTO();
+        ongridIndividualCreateUpdateDTO.setName(individual.getName());
+        ongridIndividualCreateUpdateDTO.setCity(individual.getCity());
+        ongridIndividualCreateUpdateDTO.setGender(individual.getGender());
+        ongridIndividualCreateUpdateDTO.setPhone(individual.getPhone());
+        ongridIndividualCreateUpdateDTO.setProfessionId(individual.getProfessionId());
+        ongridIndividualCreateUpdateDTO.setDob(dataFormatterService.localDateToString(individual.getDob()));
+        ongridIndividualCreateUpdateDTO.setHasConsent(true);
+        ongridIndividualCreateUpdateDTO.setConsentText(individual.getConsentText());
+        ongridIndividualCreateUpdateDTO.setFathersName(individual.getFathersName());
+
+
+        //onboarding the individual by saving its ongrid id
+        long ogIndividualId = onGridAPIService.callOnGridApi(ongridIndividualCreateUpdateDTO).getOnGridIndividualId();
+
+        //now saving this id in the individual database entity
+//        individual.setOnGridIndividualId(ogIndividualId);
+
+
+        ongridIndividualCreateUpdateDTO.setOnGridIndividualId(ogIndividualId);
+        individual.setOnGridIndividualId(ogIndividualId);
+        individualRepository.save(individual);
+
+        //returning the response dto
+        return ongridIndividualCreateUpdateDTO;
+    }
+
+
+
+
+    //method to return the list of all individuals
     @Override
     public List<Individual> findAll() {
         return individualRepository.findAll();
     }
+
+
 
 
 
@@ -173,6 +207,7 @@ public class IndividualServiceImpl implements IndividualService {
         individualRepository.save(individual);
         return individual;
     }
+
 
     private static Individual getIndividual(CreateIndividualRequest request) {
         Individual individual = new Individual();

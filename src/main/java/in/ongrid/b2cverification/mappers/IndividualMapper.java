@@ -9,6 +9,8 @@ public final class IndividualMapper {
     }
 
     public static IndividualDTO toDTO(Individual individual) {
-        return new IndividualDTO( individual.getName(), individual.getCity(), individual.getGender(), individual.getPhone(), individual.getProfessionId(), individual.getDob(), individual.isHasConsent(), individual.getConsentText(), individual.getFathersName(), individual.getMothersName());
+        return new IndividualDTO( individual.getName(), individual.getCity(), individual.getGender(), individual.getPhone(),
+                individual.getProfessionId(), individual.getDob(), individual.isHasConsent(), individual.getConsentText(),
+                individual.getFathersName(), individual.getMothersName());
     }
 }

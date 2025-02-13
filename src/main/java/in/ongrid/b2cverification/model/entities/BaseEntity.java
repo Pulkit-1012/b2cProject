@@ -18,13 +18,13 @@ public abstract class BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_created", updatable = false, nullable = false)
     @CreatedDate
-    private Date created = new Date();
+    private Date createdAt = new Date();
 
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_modified", nullable = false)
     @LastModifiedDate
-    private Date modified = new Date();
+    private Date modifiedAt = new Date();
 
     @Column(name = "date_deleted", nullable = true)
     private boolean deleted;

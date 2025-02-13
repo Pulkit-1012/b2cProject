@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,10 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request) {
 
         validateRegisterRequest(request);
+
+        //checking if the user already exsts with the same email
+//        Optional<User> dbuser = userRepository.findByEmail(request.getEmail());
+//        if(dbuser.isPresent()) throw new RuntimeException("User already exists with the same email!");
 
         var user = User.builder()
                 .userName(request.getUsername())
