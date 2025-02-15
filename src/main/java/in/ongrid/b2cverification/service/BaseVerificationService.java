@@ -12,4 +12,5 @@ public interface BaseVerificationService {
     void delete(long id);
     BaseVerificationResponseDTO requestGDCverification(long userId, long individualId, String token);
     BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token, long requestId);
+    BaseVerification findByRequestId(long requestId);
 }

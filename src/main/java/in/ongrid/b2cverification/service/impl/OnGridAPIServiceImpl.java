@@ -3,14 +3,13 @@ package in.ongrid.b2cverification.service.impl;
 import in.ongrid.b2cverification.model.dto.OngridIndividualCreateUpdateDTO;
 import in.ongrid.b2cverification.model.dto.response.BaseVerificationResponseDTO;
 import in.ongrid.b2cverification.model.dto.response.GDCVerificationResponseDTO;
+import in.ongrid.b2cverification.model.entities.BaseVerification;
 import in.ongrid.b2cverification.service.OnGridAPIService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class OnGridAPIServiceImpl implements OnGridAPIService {
@@ -21,6 +20,9 @@ public class OnGridAPIServiceImpl implements OnGridAPIService {
     @Value("${ongrid.gdcverification.request.base.url}")
     private String gdcUrl;
     //replacing the value of "{individualId}" with the actual individualId coming from the inivudal dto
+
+    @Value("${ongrid.gdcverification.result.base.url}")
+    private String gdcResultUrl;
 
     @Value("${username}")
     private String username;
@@ -54,6 +56,33 @@ public class OnGridAPIServiceImpl implements OnGridAPIService {
         ResponseEntity<BaseVerificationResponseDTO> response = restTemplate.postForEntity(url, requestEntity, BaseVerificationResponseDTO.class);
         return response.getBody();
     }
+
+
+
+    public BaseVerificationResponseDTO getGDCVerification(String individualId, long requestId) {
+        RestTemplate restTemplate = new RestTemplate();
+        // Construct the URL with Path Parameter and Query Parameter
+        String url = UriComponentsBuilder.fromHttpUrl(gdcResultUrl)  // Base URL with {individualId}
+                .queryParam("requestId", requestId)  // Add query parameter
+                .buildAndExpand(individualId)  // Replace {individualId}
+                .toUriString();  // Convert to String
+
+        // Set Headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        // Create HTTP entity with headers
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        // Make the GET request
+        ResponseEntity<BaseVerificationResponseDTO> response = restTemplate.exchange(
+                url, HttpMethod.GET, requestEntity, BaseVerificationResponseDTO.class);
+
+        return response.getBody();
+    }
+
+
 
 
 //    // RequestID as a query parameter

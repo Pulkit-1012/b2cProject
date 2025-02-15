@@ -51,7 +51,7 @@ public class AuthenticationService {
                 .userType(UserType.USER)
                 .build();
         userRepository.save(user);
-        var jwtToken = "Bearer "+jwtService.generateToken(user);
+        var jwtToken = "Bearer "+jwtService.generateToken(user, user.getId());//added user.getid
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .build();
@@ -73,7 +73,7 @@ public class AuthenticationService {
                 )
         );
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->new UsernameNotFoundException("User not found"));
-        var jwtToken = "Bearer "+jwtService.generateToken(user);
+        var jwtToken = "Bearer "+jwtService.generateToken(user, user.getId());//added user.getid
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .build();

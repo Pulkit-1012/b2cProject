@@ -7,4 +7,5 @@ import in.ongrid.b2cverification.model.dto.response.GDCVerificationResponseDTO;
 public interface OnGridAPIService {
     OngridIndividualCreateUpdateDTO callOnGridApi(OngridIndividualCreateUpdateDTO ongridIndividualCreateUpdateDTO);
     BaseVerificationResponseDTO postGDCVerification(String individualId);
+    BaseVerificationResponseDTO getGDCVerification(String individualId, long requestId);
 }

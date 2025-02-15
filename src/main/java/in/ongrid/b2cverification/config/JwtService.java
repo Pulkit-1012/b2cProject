@@ -26,6 +26,9 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);//extracting username (email) here
     }
 
+    public long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
+    }//added this function to extract thew userid
 
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -35,9 +38,13 @@ public class JwtService {
 
 
     //if i ned to generate token by just usimg the useremail
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, long id) {
+//        return generateToken(new HashMap<>(), userDetails); tha pehle without long id
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userId", id);
+        return generateToken(extraClaims, userDetails);//added the above three lines and long id in attribute
     }
+
     public boolean isTokenValid(String token,UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));

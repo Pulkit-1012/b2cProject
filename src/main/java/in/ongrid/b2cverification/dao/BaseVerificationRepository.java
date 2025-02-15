@@ -4,4 +4,5 @@ import in.ongrid.b2cverification.model.entities.BaseVerification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BaseVerificationRepository extends JpaRepository<BaseVerification, Long> {
+    BaseVerification findByRequestId(long requestId);
 }

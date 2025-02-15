@@ -61,6 +61,11 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         baseVerificationRepository.deleteById(id);
     }
 
+    @Override
+    public BaseVerification findByRequestId(long requestId) {
+        return baseVerificationRepository.findByRequestId(requestId);
+    }
+
 
 
     @Override
@@ -119,10 +124,52 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         return baseVerificationResponseDTO;
     }
 
+
+
+
     @Override
     public BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token,
                                                                   long requestId) {
 
-        return null;
+        String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
+        User user  = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+
+        if(!user.getEmail().equals(emailFromToken)) {
+            throw new UnauthorizedException("Unauthorized Request");
+        }
+
+        Optional<Individual> individual = individualRepository.findById(individualId);
+
+        if(individual.isEmpty()) throw new ResourceNotFoundException("Individual Not Found");
+
+
+        BaseVerification baseVerification = baseVerificationRepository.findByRequestId(requestId);
+
+
+        //ongrid individual id
+        long onGridIndividualId = individual.get().getOnGridIndividualId();
+        String onGridIndividualIdString = Long.toString(onGridIndividualId);
+
+        //requestId is coming from path variable
+
+        BaseVerificationResponseDTO baseVerificationResponseDTO = onGridAPIService.getGDCVerification(onGridIndividualIdString, requestId);
+
+
+        //now that i have got my response, i will set values from this dto in the baseverification entityt
+        //baseVerification.setRequestId(baseVerificationResponseDTO.getRequestId());//request id is what we get along with the response of dgcverification-post wala
+        //baseVerification.setOfferingType(OfferingType.GDC);
+        baseVerification.setState(State.Completed);
+        baseVerification.setClosedReason(baseVerificationResponseDTO.getClosedReason());
+        baseVerification.setClosedRemarks(baseVerificationResponseDTO.getClosedRemarks());
+        baseVerification.setDataSufficiencyDate(baseVerificationResponseDTO.getDataSufficiencyDate());
+        baseVerification.setCompletedDate(baseVerificationResponseDTO.getCompletedDate());
+        baseVerification.setClosed(baseVerificationResponseDTO.getClosed());
+
+
+
+        baseVerificationRepository.save(baseVerification);
+        return baseVerificationResponseDTO;
     }
+
+
 }
