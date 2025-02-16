@@ -67,12 +67,12 @@ public class OnGridAPIServiceImpl implements OnGridAPIService {
                 .buildAndExpand(individualId)  // Replace {individualId}
                 .toUriString();  // Convert to String
 
-        // Set Headers
+        // Setting Headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBasicAuth(username, password);
 
-        // Create HTTP entity with headers
+        // Creating HTTP entity with headers only because in we do not need a request body in this get for entity
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
         // Make the GET request

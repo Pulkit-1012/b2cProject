@@ -158,7 +158,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         //now that i have got my response, i will set values from this dto in the baseverification entityt
         //baseVerification.setRequestId(baseVerificationResponseDTO.getRequestId());//request id is what we get along with the response of dgcverification-post wala
         //baseVerification.setOfferingType(OfferingType.GDC);
-        baseVerification.setState(State.Completed);
+        baseVerification.setState(baseVerificationResponseDTO.getState());
         baseVerification.setClosedReason(baseVerificationResponseDTO.getClosedReason());
         baseVerification.setClosedRemarks(baseVerificationResponseDTO.getClosedRemarks());
         baseVerification.setDataSufficiencyDate(baseVerificationResponseDTO.getDataSufficiencyDate());
