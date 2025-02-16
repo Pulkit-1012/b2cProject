@@ -1,5 +1,6 @@
 package in.ongrid.b2cverification.model.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -13,6 +14,8 @@ import java.util.Date;
 @Builder
 @Data
 public class IndividualDTO {
+    @JsonProperty("individualId")
+    private long id;//added
     private String name;
     private String city;
     private String gender;
