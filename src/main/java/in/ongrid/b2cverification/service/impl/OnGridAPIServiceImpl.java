@@ -19,7 +19,6 @@ public class OnGridAPIServiceImpl implements OnGridAPIService {
 
     @Value("${ongrid.gdcverification.request.base.url}")
     private String gdcUrl;
-    //replacing the value of "{individualId}" with the actual individualId coming from the inivudal dto
 
     @Value("${ongrid.gdcverification.result.base.url}")
     private String gdcResultUrl;
@@ -61,39 +60,20 @@ public class OnGridAPIServiceImpl implements OnGridAPIService {
 
     public BaseVerificationResponseDTO getGDCVerification(String individualId, long requestId) {
         RestTemplate restTemplate = new RestTemplate();
-        // Construct the URL with Path Parameter and Query Parameter
-        String url = UriComponentsBuilder.fromHttpUrl(gdcResultUrl)  // Base URL with {individualId}
-                .queryParam("requestId", requestId)  // Add query parameter
-                .buildAndExpand(individualId)  // Replace {individualId}
-                .toUriString();  // Convert to String
+        String url = UriComponentsBuilder.fromHttpUrl(gdcResultUrl)
+                .queryParam("requestId", requestId)
+                .buildAndExpand(individualId)
+                .toUriString();
 
-        // Setting Headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBasicAuth(username, password);
 
-        // Creating HTTP entity with headers only because in we do not need a request body in this get for entity
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
-        // Make the GET request
         ResponseEntity<BaseVerificationResponseDTO> response = restTemplate.exchange(
                 url, HttpMethod.GET, requestEntity, BaseVerificationResponseDTO.class);
 
         return response.getBody();
     }
-
-
-
-
-//    // RequestID as a query parameter
-//    public BaseVerificationResponseDTO getGDCVerification(String individualId, String requestId) {
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBasicAuth(username, password);
-//        HttpEntity<String> requestEntity = new HttpEntity<>(individualId, headers);
-//        ResponseEntity<BaseVerificationResponseDTO> response = restTemplate.getForEntity(gdcUrl, requestEntity, BaseVerificationResponseDTO.class);
-//
-//        return response.getBody();
-//    }
 }

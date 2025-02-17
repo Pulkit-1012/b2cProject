@@ -21,4 +21,6 @@ public interface IndividualService {
 
     OngridIndividualCreateUpdateDTO onBoardIndividual(long userId, Individual individual, String token);
 
+    void softDeleteById(long id);
+
 }

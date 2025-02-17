@@ -58,10 +58,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(CreateUserRequest request) {
-        // validations
-//        if(StringUtils.isBlank(request.getEmail())) throw new IllegalArgumentException("Email is required");
-//        else if (StringUtils.isBlank(request.getPassword())) throw new IllegalArgumentException("Password is required");
-//        else if (StringUtils.isBlank(request.getUserName())) throw new IllegalArgumentException("UserName is required");
 
         User user = new User();
         user.setUserType(request.getUserType());

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface IndividualRepository extends JpaRepository<Individual, Long> {
     List<Individual> findByAddedBy(User user);
+    List<Individual> findByAddedByAndIsDeletedFalse(User user);//added now
 }

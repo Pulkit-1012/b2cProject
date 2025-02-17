@@ -112,10 +112,6 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
 
 
-
-        //now, before saving, i ned to save some details inside the gdc verification entity too:-
-//        GDCVerification gdcVerification = new GDCVerification();
-//
         if( baseVerificationResponseDTO.getGdcReport() != null) {
             baseVerification.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
         }
@@ -146,18 +142,13 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         BaseVerification baseVerification = baseVerificationRepository.findByRequestId(requestId);
 
 
-        //ongrid individual id
         long onGridIndividualId = individual.get().getOnGridIndividualId();
         String onGridIndividualIdString = Long.toString(onGridIndividualId);
 
-        //requestId is coming from path variable
 
         BaseVerificationResponseDTO baseVerificationResponseDTO = onGridAPIService.getGDCVerification(onGridIndividualIdString, requestId);
 
 
-        //now that i have got my response, i will set values from this dto in the baseverification entityt
-        //baseVerification.setRequestId(baseVerificationResponseDTO.getRequestId());//request id is what we get along with the response of dgcverification-post wala
-        //baseVerification.setOfferingType(OfferingType.GDC);
         baseVerification.setState(baseVerificationResponseDTO.getState());
         baseVerification.setClosedReason(baseVerificationResponseDTO.getClosedReason());
         baseVerification.setClosedRemarks(baseVerificationResponseDTO.getClosedRemarks());

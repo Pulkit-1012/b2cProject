@@ -40,10 +40,6 @@ public class AuthenticationService {
 
         validateRegisterRequest(request);
 
-        //checking if the user already exsts with the same email
-//        Optional<User> dbuser = userRepository.findByEmail(request.getEmail());
-//        if(dbuser.isPresent()) throw new RuntimeException("User already exists with the same email!");
-
         var user = User.builder()
                 .userName(request.getUsername())
                 .email(request.getEmail())
@@ -73,7 +69,7 @@ public class AuthenticationService {
                 )
         );
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->new UsernameNotFoundException("User not found"));
-        var jwtToken = "Bearer "+jwtService.generateToken(user, user.getId());//added user.getid
+        var jwtToken = "Bearer "+jwtService.generateToken(user, user.getId());
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .build();

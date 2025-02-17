@@ -53,4 +53,16 @@ public class IndividualRestController {
         OngridIndividualCreateUpdateDTO ongridIndividualCreateUpdateDTO = individualService.onBoardIndividual(userId, individual.get(), token);
         return ResponseEntity.ok(ongridIndividualCreateUpdateDTO);
     }
+
+    //deleting an indvidual
+    @PutMapping("/{userId}/individuals/{individualId}/delete")
+    public ResponseEntity<String> deleteIndividual(@PathVariable long userId, @PathVariable long individualId, @RequestHeader("Authorization") String token) {
+        Optional<Individual> individualOpt = individualRepository.findById(individualId);
+        if (!individualOpt.isPresent() || individualOpt.get().isDeleted()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Individual not found or already deleted");
+        }
+        individualService.softDeleteById(individualId);
+        return ResponseEntity.status(HttpStatus.OK).body("Individual deleted successfully");
+    }
+
 }

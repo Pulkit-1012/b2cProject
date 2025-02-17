@@ -52,7 +52,6 @@ public class IndividualServiceImpl implements IndividualService {
     //creating an individual
     @Override
     public IndividualDTO createIndividual(long userID, IndividualDTO individualDTO, String token) {
-        //checking if user exists or not
         String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
         User user  = userRepository.findById(userID).orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
@@ -74,28 +73,6 @@ public class IndividualServiceImpl implements IndividualService {
         individual.setMothersName(individualDTO.getMothersName());
 
 
-//        Individual savedIndividual = individualRepository.save(individual);
-
-
-//        inserting values into the OngridIndividualCreateUpdateDTO
-//        OngridIndividualCreateUpdateDTO ongridIndividualCreateUpdateDTO = new OngridIndividualCreateUpdateDTO();
-//        ongridIndividualCreateUpdateDTO.setName(individualDTO.getName());
-//        ongridIndividualCreateUpdateDTO.setCity(individualDTO.getCity());
-//        ongridIndividualCreateUpdateDTO.setGender(individualDTO.getGender());
-//        ongridIndividualCreateUpdateDTO.setPhone(individualDTO.getPhone());
-//        ongridIndividualCreateUpdateDTO.setProfessionId(individualDTO.getProfessionId());
-//        ongridIndividualCreateUpdateDTO.setDob(dataFormatterService.localDateToString(individualDTO.getDob()));
-//        ongridIndividualCreateUpdateDTO.setHasConsent(true);
-//        ongridIndividualCreateUpdateDTO.setConsentText(individualDTO.getConsentText());
-//        ongridIndividualCreateUpdateDTO.setFathersName(individualDTO.getFathersName());
-
-
-//        individual.setOnGridIndividualId(onGridAPIService.callOnGridApi(ongridIndividualCreateUpdateDTO).getOnGridIndividualId());
-
-        //onboard individual to ongrid
-        //save ongrid individualid (add a field in the entity)
-
-
 
 
         Individual savedIndividual = individualRepository.save(individual);
@@ -105,15 +82,24 @@ public class IndividualServiceImpl implements IndividualService {
 
 
 
-    @Override
-    public List<IndividualDTO> getIndividualsByUserId(long userId) {
-        Optional<User> user = userRepository.findById(userId);
+//    @Override
+//    public List<IndividualDTO> getIndividualsByUserId(long userId) {
+//        Optional<User> user = userRepository.findById(userId);
+//
+//        List<Individual> individuals = individualRepository.findByAddedBy(user.get());
+//
+//
+//        return individuals.stream().map(IndividualMapper::toDTO).collect(Collectors.toList());
+//    }
+@Override
+public List<IndividualDTO> getIndividualsByUserId(long userId) {
+    Optional<User> user = userRepository.findById(userId);
 
-        List<Individual> individuals = individualRepository.findByAddedBy(user.get());
+    List<Individual> individuals = individualRepository.findByAddedByAndIsDeletedFalse(user.get());
 
 
-        return individuals.stream().map(IndividualMapper::toDTO).collect(Collectors.toList());
-    }
+    return individuals.stream().map(IndividualMapper::toDTO).collect(Collectors.toList());
+}
 
 
 
@@ -136,8 +122,7 @@ public class IndividualServiceImpl implements IndividualService {
         //onboarding the individual by saving its ongrid id
         long ogIndividualId = onGridAPIService.callOnGridApi(ongridIndividualCreateUpdateDTO).getOnGridIndividualId();
 
-        //now saving this id in the individual database entity
-//        individual.setOnGridIndividualId(ogIndividualId);
+
 
 
         ongridIndividualCreateUpdateDTO.setOnGridIndividualId(ogIndividualId);
@@ -148,7 +133,14 @@ public class IndividualServiceImpl implements IndividualService {
         return ongridIndividualCreateUpdateDTO;
     }
 
-
+    @Override
+    public void softDeleteById(long id) {
+        Optional<Individual> individual = individualRepository.findById(id);
+        individual.ifPresent(ind -> {
+            ind.setDeleted(true);
+            individualRepository.save(ind);
+        });
+    }
 
 
     //method to return the list of all individuals
@@ -161,7 +153,6 @@ public class IndividualServiceImpl implements IndividualService {
 
 
 
-    //this function fetched the individual from database then checks if the userid passed as a pathvariable belong to the owner of this indoivuduak
     @Override
     public IndividualDTO findById(long userId, long individualId, String token) {
 
@@ -228,6 +219,9 @@ public class IndividualServiceImpl implements IndividualService {
     public void deleteById(Long id) {
         individualRepository.deleteById(id);
     }
+
+
+    //
 
 
 

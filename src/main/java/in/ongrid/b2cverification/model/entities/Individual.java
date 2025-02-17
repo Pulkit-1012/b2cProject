@@ -59,6 +59,9 @@ public class Individual extends BaseEntity {
     @JoinColumn(name = "added_by_user_id")
     private User addedBy;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
 
 
 
