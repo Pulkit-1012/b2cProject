@@ -58,4 +58,11 @@ public class BaseVerificationRestController {
         return ResponseEntity.ok(baseVerificationResponseDTO);
     }
 
+
+
+
+
+    //dont know if i have written rigth or not
+
+
 }

@@ -2,6 +2,7 @@ package in.ongrid.b2cverification.service.impl;
 
 import in.ongrid.b2cverification.config.JwtService;
 import in.ongrid.b2cverification.dao.BaseVerificationRepository;
+import in.ongrid.b2cverification.dao.GDCVerificationRepository;
 import in.ongrid.b2cverification.dao.IndividualRepository;
 import in.ongrid.b2cverification.dao.UserRepository;
 import in.ongrid.b2cverification.exceptions.ResourceNotFoundException;
@@ -30,14 +31,16 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
     private final IndividualRepository individualRepository;
     private final OnGridAPIService onGridAPIService;
     private final GDCVerificationService gdcVerificationService;
+    private final GDCVerificationRepository gdcVerificationRepository;
 
-    public BaseVerificationServiceImpl(BaseVerificationRepository baseVerificationRepository, JwtService jwtService, UserRepository userRepository, IndividualRepository individualRepository, OnGridAPIService onGridAPIService, GDCVerificationService gdcVerificationService) {
+    public BaseVerificationServiceImpl(BaseVerificationRepository baseVerificationRepository, JwtService jwtService, UserRepository userRepository, IndividualRepository individualRepository, OnGridAPIService onGridAPIService, GDCVerificationService gdcVerificationService, GDCVerificationRepository gdcVerificationRepository) {
         this.baseVerificationRepository = baseVerificationRepository;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.individualRepository = individualRepository;
         this.onGridAPIService = onGridAPIService;
         this.gdcVerificationService = gdcVerificationService;
+        this.gdcVerificationRepository = gdcVerificationRepository;
     }
 
 
@@ -155,6 +158,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         baseVerification.setDataSufficiencyDate(baseVerificationResponseDTO.getDataSufficiencyDate());
         baseVerification.setCompletedDate(baseVerificationResponseDTO.getCompletedDate());
         baseVerification.setClosed(baseVerificationResponseDTO.getClosed());
+
 
 
 

@@ -15,6 +15,7 @@ import in.ongrid.b2cverification.model.entities.User;
 import in.ongrid.b2cverification.service.DataFormatterService;
 import in.ongrid.b2cverification.service.IndividualService;
 import in.ongrid.b2cverification.service.OnGridAPIService;
+import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -134,12 +135,11 @@ public List<IndividualDTO> getIndividualsByUserId(long userId) {
     }
 
     @Override
-    public void softDeleteById(long id) {
-        Optional<Individual> individual = individualRepository.findById(id);
-        individual.ifPresent(ind -> {
-            ind.setDeleted(true);
-            individualRepository.save(ind);
-        });
+    public void softDeleteById(long individualId) {
+        Individual individual = individualRepository.findById(individualId)
+                .orElseThrow(() -> new ResourceNotFoundException("Individual not found"));
+        individual.setDeleted(true);
+        individualRepository.save(individual);
     }
 
 
