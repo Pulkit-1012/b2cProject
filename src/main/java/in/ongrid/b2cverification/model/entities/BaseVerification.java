@@ -58,12 +58,7 @@ public class BaseVerification extends BaseEntity{
 
     @Column(name = "closed")
     private String closed;
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "result")
-//    private Result result;
 
-//    @Column(name = "pdf_url")
-//    private String pdfReportUrl;
 
 
 

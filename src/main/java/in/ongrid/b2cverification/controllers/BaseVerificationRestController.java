@@ -5,6 +5,7 @@ import in.ongrid.b2cverification.dao.DocumentRepository;
 import in.ongrid.b2cverification.dao.IndividualRepository;
 import in.ongrid.b2cverification.dao.UserRepository;
 import in.ongrid.b2cverification.model.dto.response.BaseVerificationResponseDTO;
+import in.ongrid.b2cverification.model.dto.response.GDCVerificationResponseDTO;
 import in.ongrid.b2cverification.model.entities.*;
 import in.ongrid.b2cverification.model.enums.DocType;
 import in.ongrid.b2cverification.model.enums.OfferingType;
@@ -50,12 +51,12 @@ public class BaseVerificationRestController {
     }
 
     @GetMapping("/{userId}/individuals/{individualId}/verify-gdc/{requestId}")
-    public ResponseEntity<BaseVerificationResponseDTO> checkGDCVerificationStatus(@PathVariable long userId,
-                                                                                  @PathVariable long individualId,
-                                                                                  @PathVariable long requestId,
-                                                                                  @RequestHeader("Authorization") String token) {
-        BaseVerificationResponseDTO baseVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, token, requestId);
-        return ResponseEntity.ok(baseVerificationResponseDTO);
+    public ResponseEntity<GDCVerificationResponseDTO> checkGDCVerificationStatus(@PathVariable long userId,
+                                                                            @PathVariable long individualId,
+                                                                            @PathVariable long requestId,
+                                                                            @RequestHeader("Authorization") String token) {
+        GDCVerificationResponseDTO gdcVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, token, requestId);
+        return ResponseEntity.ok(gdcVerificationResponseDTO);
     }
 
 

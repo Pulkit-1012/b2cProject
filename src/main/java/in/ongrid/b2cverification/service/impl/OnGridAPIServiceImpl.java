@@ -58,6 +58,27 @@ public class OnGridAPIServiceImpl implements OnGridAPIService {
 
 
 
+//    @Override
+//    public GDCVerificationResponseDTO getGDCVerification(String individualId, long requestId) {
+//        RestTemplate restTemplate = new RestTemplate();
+//        String url = UriComponentsBuilder.fromHttpUrl(gdcResultUrl)
+//                .queryParam("requestId", requestId)
+//                .buildAndExpand(individualId)
+//                .toUriString();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.setBasicAuth(username, password);
+//
+//        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<GDCVerificationResponseDTO> response = restTemplate.exchange(
+//                url, HttpMethod.GET, requestEntity, GDCVerificationResponseDTO.class);
+//
+//        return response.getBody();
+//    }
+
+    @Override
     public BaseVerificationResponseDTO getGDCVerification(String individualId, long requestId) {
         RestTemplate restTemplate = new RestTemplate();
         String url = UriComponentsBuilder.fromHttpUrl(gdcResultUrl)

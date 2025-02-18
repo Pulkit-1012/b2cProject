@@ -3,6 +3,7 @@ package in.ongrid.b2cverification.service;
 import in.ongrid.b2cverification.model.dto.response.BaseVerificationResponseDTO;
 import in.ongrid.b2cverification.model.dto.response.GDCVerificationResponseDTO;
 import in.ongrid.b2cverification.model.entities.BaseVerification;
+import in.ongrid.b2cverification.model.entities.GDCVerification;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface BaseVerificationService {
 //    GDCVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token, long requestId);
     BaseVerification findByRequestId(long requestId);
 
-    BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token, long requestId);
+    GDCVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token, long requestId);
 }

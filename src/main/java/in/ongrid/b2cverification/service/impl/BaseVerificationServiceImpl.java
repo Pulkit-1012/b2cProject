@@ -8,6 +8,7 @@ import in.ongrid.b2cverification.dao.UserRepository;
 import in.ongrid.b2cverification.exceptions.ResourceNotFoundException;
 import in.ongrid.b2cverification.exceptions.UnauthorizedException;
 import in.ongrid.b2cverification.model.dto.response.BaseVerificationResponseDTO;
+import in.ongrid.b2cverification.model.dto.response.GDCVerificationResponseDTO;
 import in.ongrid.b2cverification.model.entities.BaseVerification;
 import in.ongrid.b2cverification.model.entities.GDCVerification;
 import in.ongrid.b2cverification.model.entities.Individual;
@@ -53,6 +54,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
     public BaseVerification save(BaseVerification baseVerification) {
         return baseVerificationRepository.save(baseVerification);
     }
+
 
     @Override
     public BaseVerification findById(long id) {
@@ -104,7 +106,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         //now that i have got my response, i will set values from this dto in the baseverification entityt
         baseVerification.setRequestId(baseVerificationResponseDTO.getRequestId());//request id is what we get along with the response of dgcverification-post wala
         baseVerification.setOfferingType(OfferingType.GDC);
-        baseVerification.setState(State.Requested);
+        baseVerification.setState(baseVerificationResponseDTO.getState());
         baseVerification.setClosedReason(baseVerificationResponseDTO.getClosedReason());
         baseVerification.setClosedRemarks(baseVerificationResponseDTO.getClosedRemarks());
         baseVerification.setDataSufficiencyDate(baseVerificationResponseDTO.getDataSufficiencyDate());
@@ -127,8 +129,8 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
 
     @Override
-    public BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token,
-                                                                  long requestId) {
+    public GDCVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token,
+                                                                 long requestId) {
 
         String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
         User user  = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
@@ -142,7 +144,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         if(individual.isEmpty()) throw new ResourceNotFoundException("Individual Not Found");
 
 
-        BaseVerification baseVerification = baseVerificationRepository.findByRequestId(requestId);
+        GDCVerification baseVerification = gdcVerificationRepository.findByRequestId(requestId);
 
 
         long onGridIndividualId = individual.get().getOnGridIndividualId();
@@ -160,10 +162,18 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         baseVerification.setClosed(baseVerificationResponseDTO.getClosed());
 
 
+        baseVerification.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
+        baseVerification.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
+        baseVerification.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
 
+        GDCVerificationResponseDTO gdcVerificationResponseDTO = new GDCVerificationResponseDTO();
+
+        gdcVerificationResponseDTO.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
+        gdcVerificationResponseDTO.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
+        gdcVerificationResponseDTO.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
 
         baseVerificationRepository.save(baseVerification);
-        return baseVerificationResponseDTO;
+        return gdcVerificationResponseDTO;
     }
 
 
