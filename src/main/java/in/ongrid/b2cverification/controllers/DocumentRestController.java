@@ -102,7 +102,7 @@ public class DocumentRestController {
 
 
 
-    @GetMapping("/{userId}/individuals/{individualId}/check-pan")
+    @GetMapping("/{userId}/individuals/{individualId}/check-pan/{id}")
     public ResponseEntity<PANVerificationResponseDTO> checkPANVerificationStatus(@PathVariable long userId,
                                                                                  @PathVariable long individualId,
                                                                                  @PathVariable long id,

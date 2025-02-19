@@ -1,14 +1,12 @@
 package in.ongrid.b2cverification.service.impl;
 
-import in.ongrid.b2cverification.dao.BaseVerificationRepository;
-import in.ongrid.b2cverification.dao.DocumentRepository;
-import in.ongrid.b2cverification.dao.IndividualRepository;
-import in.ongrid.b2cverification.dao.UserRepository;
+import in.ongrid.b2cverification.config.JwtService;
+import in.ongrid.b2cverification.dao.*;
+import in.ongrid.b2cverification.exceptions.ResourceNotFoundException;
+import in.ongrid.b2cverification.exceptions.UnauthorizedException;
 import in.ongrid.b2cverification.model.dto.response.BaseVerificationResponseDTO;
 import in.ongrid.b2cverification.model.dto.response.PANVerificationResponseDTO;
-import in.ongrid.b2cverification.model.entities.Document;
-import in.ongrid.b2cverification.model.entities.Individual;
-import in.ongrid.b2cverification.model.entities.PANVerification;
+import in.ongrid.b2cverification.model.entities.*;
 import in.ongrid.b2cverification.model.enums.OfferingType;
 import in.ongrid.b2cverification.service.DocumentService;
 import in.ongrid.b2cverification.service.OnGridAPIService;
@@ -25,13 +23,17 @@ public class DocumentServiceImpl implements DocumentService {
     private final UserRepository userRepository;
     private final OnGridAPIService onGridAPIService;
     private final BaseVerificationRepository baseVerificationRepository;
+    private final JwtService jwtService;
+    private final PANVerificationRepository panVerificationRepository;
 
-    public DocumentServiceImpl(DocumentRepository documentRepository, IndividualRepository individualRepository, UserRepository userRepository, OnGridAPIService onGridAPIService, BaseVerificationRepository baseVerificationRepository) {
+    public DocumentServiceImpl(DocumentRepository documentRepository, IndividualRepository individualRepository, UserRepository userRepository, OnGridAPIService onGridAPIService, BaseVerificationRepository baseVerificationRepository, JwtService jwtService, PANVerificationRepository panVerificationRepository) {
         this.documentRepository = documentRepository;
         this.individualRepository = individualRepository;
         this.userRepository = userRepository;
         this.onGridAPIService = onGridAPIService;
         this.baseVerificationRepository = baseVerificationRepository;
+        this.jwtService = jwtService;
+        this.panVerificationRepository = panVerificationRepository;
     }
 
     @Override
@@ -73,6 +75,47 @@ public class DocumentServiceImpl implements DocumentService {
 
 
         baseVerificationRepository.save(baseverification);
+        return panVerificationResponseDTO;
+    }
+
+    @Override
+    public PANVerificationResponseDTO checkPANVerificationStatus(long userId, long individualId, long id, String token) {
+
+        String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
+        User user  = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+
+        if(!user.getEmail().equals(emailFromToken)) {
+            throw new UnauthorizedException("Unauthorized Request");
+        }
+
+        Optional<Individual> individual = individualRepository.findById(individualId);
+
+        if(individual.isEmpty()) throw new ResourceNotFoundException("Individual Not Found");
+
+        Long requestId = baseVerificationRepository.findRequestIdByIndividualIdAndBaseVerificationId(individualId, id);
+
+        PANVerification baseVerification = panVerificationRepository.findByRequestId(requestId);
+
+        long onGridIndividualId = individual.get().getOnGridIndividualId();
+
+        PANVerificationResponseDTO panVerificationResponseDTO = onGridAPIService.getPANVerification(onGridIndividualId, requestId);
+
+        baseVerification.setState(panVerificationResponseDTO.getState());
+        baseVerification.setClosedReason(panVerificationResponseDTO.getClosedReason());
+        baseVerification.setClosedRemarks(panVerificationResponseDTO.getClosedRemarks());
+        baseVerification.setDataSufficiencyDate(panVerificationResponseDTO.getDataSufficiencyDate());
+        baseVerification.setCompletedDate(panVerificationResponseDTO.getCompletedDate());
+        baseVerification.setClosed(panVerificationResponseDTO.getClosedDate());
+
+        if(panVerificationResponseDTO.getReport()!=null) {
+            baseVerification.setReason(panVerificationResponseDTO.getReport().getReason());
+            baseVerification.setResult(panVerificationResponseDTO.getReport().getResult());
+            baseVerification.setPdfServingUrl(panVerificationResponseDTO.getReport().getPdfServingUrl());
+        }
+
+
+        panVerificationRepository.save(baseVerification);
+
         return panVerificationResponseDTO;
     }
 }

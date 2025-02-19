@@ -183,7 +183,25 @@ public class OnGridAPIServiceImpl implements OnGridAPIService {
         return response.getBody();
     }
 
+    @Override
+    public PANVerificationResponseDTO getPANVerification(long individualId, long requestId) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = UriComponentsBuilder.fromHttpUrl(panVerificationResultUrl)
+                .queryParam("requestId", requestId)
+                .buildAndExpand(individualId)
+                .toUriString();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<PANVerificationResponseDTO> response = restTemplate.exchange(
+                url, HttpMethod.GET, requestEntity, PANVerificationResponseDTO.class);
+
+        return response.getBody();
+    }
 
 
 }

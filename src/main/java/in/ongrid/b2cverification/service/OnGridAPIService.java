@@ -16,4 +16,6 @@ public interface OnGridAPIService {
     AddPANDocResponseDTO addPANDocument(String individualId, PANDocDTO panDocDTO);
 
     PANVerificationResponseDTO postPANVerification(String documentId, long ogIndividualId);
+
+    PANVerificationResponseDTO getPANVerification(long individualId, long requestId);
 }

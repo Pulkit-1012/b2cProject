@@ -7,4 +7,5 @@ public interface DocumentService {
     void save(Document document);
 
     PANVerificationResponseDTO requestingPanVerification(long userId, long individualId, String documentId);
+    PANVerificationResponseDTO checkPANVerificationStatus(long userId, long individualId, long id, String token);
 }
