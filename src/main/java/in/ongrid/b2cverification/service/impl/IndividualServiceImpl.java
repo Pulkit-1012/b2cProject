@@ -17,10 +17,12 @@ import in.ongrid.b2cverification.service.IndividualService;
 import in.ongrid.b2cverification.service.OnGridAPIService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.internal.constraintvalidators.bv.NullValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -108,6 +110,8 @@ public List<IndividualDTO> getIndividualsByUserId(long userId) {
     @Override
     public OngridIndividualCreateUpdateDTO onBoardIndividual(long userId, Individual individual, String token) {
 
+        if(individual.getOnGridIndividualId()!=0) throw new BadRequestException("Individual is already onboarded!");
+
         OngridIndividualCreateUpdateDTO ongridIndividualCreateUpdateDTO = new OngridIndividualCreateUpdateDTO();
         ongridIndividualCreateUpdateDTO.setName(individual.getName());
         ongridIndividualCreateUpdateDTO.setCity(individual.getCity());
@@ -137,7 +141,7 @@ public List<IndividualDTO> getIndividualsByUserId(long userId) {
     @Override
     public void softDeleteById(long individualId) {
         Individual individual = individualRepository.findById(individualId)
-                .orElseThrow(() -> new ResourceNotFoundException("Individual not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Individual Not Found"));
         individual.setDeleted(true);
         individualRepository.save(individual);
     }

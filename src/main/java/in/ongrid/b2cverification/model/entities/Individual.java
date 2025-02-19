@@ -65,6 +65,7 @@ public class Individual extends BaseEntity {
 
 
 
+
     //no attribute constructor
 
     public Individual( String name, String city, String gender, String phone, String professionId, LocalDate dob, String fathersName, boolean hasConsent, String consentText, String mothersName, long onGridIndividualId) {

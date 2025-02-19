@@ -7,8 +7,10 @@ import in.ongrid.b2cverification.dao.IndividualRepository;
 import in.ongrid.b2cverification.dao.UserRepository;
 import in.ongrid.b2cverification.exceptions.ResourceNotFoundException;
 import in.ongrid.b2cverification.exceptions.UnauthorizedException;
+import in.ongrid.b2cverification.mappers.VerificationMapper;
 import in.ongrid.b2cverification.model.dto.response.BaseVerificationResponseDTO;
 import in.ongrid.b2cverification.model.dto.response.GDCVerificationResponseDTO;
+import in.ongrid.b2cverification.model.dto.response.VerificationCardDTO;
 import in.ongrid.b2cverification.model.entities.BaseVerification;
 import in.ongrid.b2cverification.model.entities.GDCVerification;
 import in.ongrid.b2cverification.model.entities.Individual;
@@ -20,8 +22,10 @@ import in.ongrid.b2cverification.service.GDCVerificationService;
 import in.ongrid.b2cverification.service.OnGridAPIService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BaseVerificationServiceImpl implements BaseVerificationService {
@@ -87,11 +91,13 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
         if(individual.isEmpty()) throw new ResourceNotFoundException("Individual Not Found");
 
+
+
         //getting the individualId saved after onboarding the individual
-        long requestId = individual.get().getOnGridIndividualId();
+        long ogiId = individual.get().getOnGridIndividualId();
 
         //casting long to string
-        String requestIdString = Long.toString(requestId);
+        String ogiIdString = Long.toString(ogiId);
 
 
         GDCVerification baseVerification = new GDCVerification();
@@ -100,7 +106,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
 
         //now i wil call the function to initiate the gdc verification api
-        BaseVerificationResponseDTO baseVerificationResponseDTO = onGridAPIService.postGDCVerification(requestIdString);
+        BaseVerificationResponseDTO baseVerificationResponseDTO = onGridAPIService.postGDCVerification(ogiIdString);
 
 
         //now that i have got my response, i will set values from this dto in the baseverification entityt
@@ -129,7 +135,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
 
     @Override
-    public GDCVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token,
+    public BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token,
                                                                  long requestId) {
 
         String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
@@ -161,19 +167,50 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         baseVerification.setCompletedDate(baseVerificationResponseDTO.getCompletedDate());
         baseVerification.setClosed(baseVerificationResponseDTO.getClosed());
 
+        if( baseVerificationResponseDTO.getGdcReport() != null) {
+            baseVerification.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
+            baseVerification.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
+            baseVerification.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
+        }
 
-        baseVerification.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
-        baseVerification.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
-        baseVerification.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
 
-        GDCVerificationResponseDTO gdcVerificationResponseDTO = new GDCVerificationResponseDTO();
 
-        gdcVerificationResponseDTO.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
-        gdcVerificationResponseDTO.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
-        gdcVerificationResponseDTO.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
+//        baseVerification.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
+//        baseVerification.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
+//        baseVerification.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
+
+//        GDCVerificationResponseDTO gdcVerificationResponseDTO = new GDCVerificationResponseDTO();
+//
+//        if(baseVerificationResponseDTO.getGdcReport() != null) {
+//            gdcVerificationResponseDTO.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
+//            gdcVerificationResponseDTO.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
+//            gdcVerificationResponseDTO.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
+//        }
+
 
         baseVerificationRepository.save(baseVerification);
-        return gdcVerificationResponseDTO;
+        return baseVerificationResponseDTO;
+    }
+
+    @Override
+    public List<VerificationCardDTO> getVerificationList(long userId, long individualId, String token) {
+
+        String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
+        User user  = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+
+        if(!user.getEmail().equals(emailFromToken)) {
+            throw new UnauthorizedException("Unauthorized Request");
+        }
+
+        Optional<Individual> individual = individualRepository.findById(individualId);
+
+        if(individual.isEmpty()) throw new ResourceNotFoundException("Individual Not Found");
+
+//        if(!individual.get().getAddedBy().equals(userId)) throw new UnauthorizedException("Unauthorized Request");
+
+        List<BaseVerification> baseVerifications = baseVerificationRepository.findByIndividualId(individualId);
+
+        return baseVerifications.stream().map(VerificationMapper::toDto).toList();
     }
 
 

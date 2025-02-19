@@ -6,6 +6,7 @@ import in.ongrid.b2cverification.dao.IndividualRepository;
 import in.ongrid.b2cverification.dao.UserRepository;
 import in.ongrid.b2cverification.model.dto.response.BaseVerificationResponseDTO;
 import in.ongrid.b2cverification.model.dto.response.GDCVerificationResponseDTO;
+import in.ongrid.b2cverification.model.dto.response.VerificationCardDTO;
 import in.ongrid.b2cverification.model.entities.*;
 import in.ongrid.b2cverification.model.enums.DocType;
 import in.ongrid.b2cverification.model.enums.OfferingType;
@@ -15,6 +16,7 @@ import in.ongrid.b2cverification.service.PANDocService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -51,15 +53,22 @@ public class BaseVerificationRestController {
     }
 
     @GetMapping("/{userId}/individuals/{individualId}/verify-gdc/{requestId}")
-    public ResponseEntity<GDCVerificationResponseDTO> checkGDCVerificationStatus(@PathVariable long userId,
+    public ResponseEntity<BaseVerificationResponseDTO> checkGDCVerificationStatus(@PathVariable long userId,
                                                                             @PathVariable long individualId,
                                                                             @PathVariable long requestId,
                                                                             @RequestHeader("Authorization") String token) {
-        GDCVerificationResponseDTO gdcVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, token, requestId);
-        return ResponseEntity.ok(gdcVerificationResponseDTO);
+        BaseVerificationResponseDTO baseVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, token, requestId);
+        return ResponseEntity.ok(baseVerificationResponseDTO);
     }
 
 
+    @GetMapping("/{userId}/individuals/{individualId}/verifications")
+    public ResponseEntity<List<VerificationCardDTO>> getListOfVerifications(@PathVariable long userId,
+                                                                            @PathVariable long individualId,
+                                                                            @RequestHeader("Authorization") String token) {
+        List<VerificationCardDTO> verificationCardDTOList = baseVerificationService.getVerificationList(userId, individualId, token);
+        return ResponseEntity.ok(verificationCardDTOList);
+    }
 
 
 

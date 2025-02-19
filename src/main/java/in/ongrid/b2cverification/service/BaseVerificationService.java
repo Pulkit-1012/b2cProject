@@ -2,6 +2,7 @@ package in.ongrid.b2cverification.service;
 
 import in.ongrid.b2cverification.model.dto.response.BaseVerificationResponseDTO;
 import in.ongrid.b2cverification.model.dto.response.GDCVerificationResponseDTO;
+import in.ongrid.b2cverification.model.dto.response.VerificationCardDTO;
 import in.ongrid.b2cverification.model.entities.BaseVerification;
 import in.ongrid.b2cverification.model.entities.GDCVerification;
 
@@ -16,5 +17,7 @@ public interface BaseVerificationService {
 //    GDCVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token, long requestId);
     BaseVerification findByRequestId(long requestId);
 
-    GDCVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token, long requestId);
+    BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token, long requestId);
+
+    List<VerificationCardDTO> getVerificationList(long userId, long individualId, String token);
 }

@@ -37,7 +37,6 @@ public class BaseVerification extends BaseEntity{
     @Column(name = "status")
     private State state;
 
-
     @Column(name = "ongrid_gdc_request_id")
     private int requestId;
 
