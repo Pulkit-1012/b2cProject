@@ -4,6 +4,7 @@ package in.ongrid.b2cverification.controllers;
 import in.ongrid.b2cverification.config.JwtService;
 import in.ongrid.b2cverification.dao.DocumentRepository;
 import in.ongrid.b2cverification.dao.IndividualRepository;
+import in.ongrid.b2cverification.dao.PANDocRepository;
 import in.ongrid.b2cverification.dao.UserRepository;
 import in.ongrid.b2cverification.exceptions.ResourceNotFoundException;
 import in.ongrid.b2cverification.exceptions.UnauthorizedException;
@@ -22,20 +23,22 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class DocumentRestController {
 
-    private JwtService jwtService;
-    private UserRepository userRepository;
-    private IndividualRepository individualRepository;
-    private PANDocService panDocService;
-    private DocumentRepository documentRepository;
-    private DocumentService documentService;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final IndividualRepository individualRepository;
+    private final PANDocService panDocService;
+    private final DocumentRepository documentRepository;
+    private final DocumentService documentService;
+    private final PANDocRepository panDocRepository;
 
-    public DocumentRestController(JwtService jwtService, UserRepository userRepository, IndividualRepository individualRepository, PANDocService panDocService, DocumentRepository documentRepository, DocumentService documentService) {
+    public DocumentRestController(JwtService jwtService, UserRepository userRepository, IndividualRepository individualRepository, PANDocService panDocService, DocumentRepository documentRepository, DocumentService documentService, PANDocRepository panDocRepository) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.individualRepository = individualRepository;
         this.panDocService = panDocService;
         this.documentRepository = documentRepository;
         this.documentService = documentService;
+        this.panDocRepository = panDocRepository;
     }
 
 
@@ -61,6 +64,7 @@ public class DocumentRestController {
             throw new UnauthorizedException("You do not have permission to add this document!");
         }
 
+        if(panDocRepository.findPANDocByIndividual(dbIndividual.get())!=null) throw new ResourceNotFoundException("PAN document already exists!");
 
         panDocService.savePanDoc(dbIndividual.get(), panDocDTO);
 
