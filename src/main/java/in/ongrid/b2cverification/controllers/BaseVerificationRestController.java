@@ -64,11 +64,12 @@ public class BaseVerificationRestController {
 //        return ResponseEntity.ok(baseVerificationResponseDTO);
 //    }
 
-    @GetMapping("/{userId}/individuals/{individualId}/verify-gdc")
+    @GetMapping("/{userId}/individuals/{individualId}/verify-gdc/{id}")
     public ResponseEntity<BaseVerificationResponseDTO> checkGDCVerificationStatus(@PathVariable long userId,
                                                                                   @PathVariable long individualId,
+                                                                                  @PathVariable long id,
                                                                                   @RequestHeader("Authorization") String token) {
-        BaseVerificationResponseDTO baseVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, token);
+        BaseVerificationResponseDTO baseVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, id, token);
         return ResponseEntity.ok(baseVerificationResponseDTO);
     }
 

@@ -137,7 +137,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
 
     @Override
-    public BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token) {
+    public BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, long id, String token) {
 
         String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
         User user  = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
@@ -150,8 +150,9 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
         if(individual.isEmpty()) throw new ResourceNotFoundException("Individual Not Found");
 
-        Long requestId = baseVerificationRepository.findRequestIdByIndividualId(individualId);
+        Long requestId = baseVerificationRepository.findRequestIdByIndividualIdAndBaseVerificationId(individualId, id);
         log.warn("requestId: {}", requestId);
+        log.warn("Id: {}", id);
 
         GDCVerification baseVerification = gdcVerificationRepository.findByRequestId(requestId);
 

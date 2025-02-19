@@ -17,7 +17,7 @@ public interface BaseVerificationService {
 //    GDCVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token, long requestId);
     BaseVerification findByRequestId(long requestId);
 
-    BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token);
+    BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, long id, String token);
 
     List<VerificationCardDTO> getVerificationList(long userId, long individualId, String token);
 }

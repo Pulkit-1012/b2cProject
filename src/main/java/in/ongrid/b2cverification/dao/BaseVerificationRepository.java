@@ -18,7 +18,7 @@ public interface BaseVerificationRepository extends JpaRepository<BaseVerificati
     BaseVerification findByRequestId(long requestId);
     List<BaseVerification> findByIndividualId(long individualId);
 
-    @Query(value = "SELECT ongrid_gdc_request_id FROM base_verification WHERE individual_id = :individualId", nativeQuery = true)
-    Long findRequestIdByIndividualId(@Param("individualId") Long individualId);
+    @Query(value = "SELECT ongrid_gdc_request_id FROM base_verification WHERE individual_id = :individualId AND id = :id", nativeQuery = true)
+    Long findRequestIdByIndividualIdAndBaseVerificationId(@Param("individualId") Long individualId, @Param("id") long id);
 
 }

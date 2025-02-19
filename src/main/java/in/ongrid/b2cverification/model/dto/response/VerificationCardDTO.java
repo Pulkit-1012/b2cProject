@@ -13,5 +13,6 @@ import lombok.*;
 public class VerificationCardDTO {
     private OfferingType offeringType;
     private State state;
-    private int requestId;
+//    private int requestId; //removed
+    private long id;//added
 }

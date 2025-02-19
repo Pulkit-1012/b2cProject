@@ -13,7 +13,7 @@ public final class VerificationMapper {
         return new VerificationCardDTO(
                 baseVerification.getOfferingType(),
                 baseVerification.getState(),
-                baseVerification.getRequestId()
+                baseVerification.getId()
         );
     }
 }
