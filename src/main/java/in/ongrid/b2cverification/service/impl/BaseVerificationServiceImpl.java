@@ -174,20 +174,6 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         }
 
 
-
-//        baseVerification.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
-//        baseVerification.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
-//        baseVerification.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
-
-//        GDCVerificationResponseDTO gdcVerificationResponseDTO = new GDCVerificationResponseDTO();
-//
-//        if(baseVerificationResponseDTO.getGdcReport() != null) {
-//            gdcVerificationResponseDTO.setResult(baseVerificationResponseDTO.getGdcReport().getResult());
-//            gdcVerificationResponseDTO.setReason(baseVerificationResponseDTO.getGdcReport().getReason());
-//            gdcVerificationResponseDTO.setPdfServingUrl(baseVerificationResponseDTO.getGdcReport().getPdfServingUrl());
-//        }
-
-
         baseVerificationRepository.save(baseVerification);
         return baseVerificationResponseDTO;
     }

@@ -52,6 +52,9 @@ public class BaseVerificationRestController {
         return ResponseEntity.ok(baseVerificationResponseDTO);
     }
 
+
+
+
     @GetMapping("/{userId}/individuals/{individualId}/verify-gdc/{requestId}")
     public ResponseEntity<BaseVerificationResponseDTO> checkGDCVerificationStatus(@PathVariable long userId,
                                                                             @PathVariable long individualId,
