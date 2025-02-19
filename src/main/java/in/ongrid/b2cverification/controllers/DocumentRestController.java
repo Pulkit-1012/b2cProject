@@ -70,7 +70,7 @@ public class DocumentRestController {
 
 
     //requesting pan verification
-    @PostMapping("/{userId}/individuals/{individualId}/verifyPan")
+    @PostMapping("/{userId}/individuals/{individualId}/verify-pan")
     public ResponseEntity<PANVerificationResponseDTO> requestPANVerification(@PathVariable long userId, @PathVariable long individualId, @RequestHeader("Authorization") String token) {
 
         String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
@@ -102,6 +102,7 @@ public class DocumentRestController {
 
 
 
+    @GetMapping("/{userId}/individuals/{individualId}/check-pan")
 
 
 
