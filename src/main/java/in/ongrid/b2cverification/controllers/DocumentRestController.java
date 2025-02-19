@@ -103,6 +103,34 @@ public class DocumentRestController {
 
 
     @GetMapping("/{userId}/individuals/{individualId}/check-pan")
+    public ResponseEntity<PANVerificationResponseDTO> checkPANVerificationStatus(@PathVariable long userId,
+                                                                                 @PathVariable long individualId,
+                                                                                 @PathVariable long id,
+                                                                                 @RequestHeader("Authorization") String token) {
+
+        String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
+        Optional<Individual> dbIndividual = individualRepository.findById(individualId);
+        Optional<User> dbUser = userRepository.findById(userId);
+
+        if(dbUser.isEmpty()) {
+            throw new ResourceNotFoundException("User not found!");
+        }
+        if(!dbUser.get().getEmail().equals(emailFromToken)) {
+            throw new UnauthorizedException("You do not have permission to add this document!");
+        }
+
+        if(dbIndividual.isEmpty()) {
+            throw new ResourceNotFoundException("Individual not found!");
+        }
+
+        if(!dbIndividual.get().getAddedBy().equals(dbUser.get())) {
+            throw new UnauthorizedException("You do not have permission to add this document!");
+        }
+
+        PANVerificationResponseDTO panVerificationResponseDTO = documentService.checkPANVerificationStatus(userId, individualId, id, token);
+        return ResponseEntity.ok(panVerificationResponseDTO);
+
+    }
 
 
 
