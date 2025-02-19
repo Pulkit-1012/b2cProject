@@ -16,6 +16,7 @@ public class PANDoc extends Document{
 
 
     private String panNumber;
+    private Long ongridId;
 
 
 

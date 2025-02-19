@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Service
 public class BaseVerificationServiceImpl implements BaseVerificationService {
 
@@ -151,8 +151,8 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
         if(individual.isEmpty()) throw new ResourceNotFoundException("Individual Not Found");
 
         Long requestId = baseVerificationRepository.findRequestIdByIndividualIdAndBaseVerificationId(individualId, id);
-        log.warn("requestId: {}", requestId);
-        log.warn("Id: {}", id);
+//        .warn("requestId: {}", requestId);
+//        log.warn("Id: {}", id);
 
         GDCVerification baseVerification = gdcVerificationRepository.findByRequestId(requestId);
 

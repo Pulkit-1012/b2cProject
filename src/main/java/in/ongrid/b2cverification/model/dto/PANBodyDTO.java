@@ -9,8 +9,6 @@ import lombok.*;
 @Setter
 @Data
 @Builder
-public class PANDocDTO {
-    private String nameAsPerDocument;
-
-    private String documentUID;
+public class PANBodyDTO {
+    private int documentId;
 }

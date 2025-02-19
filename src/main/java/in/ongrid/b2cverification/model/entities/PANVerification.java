@@ -15,6 +15,16 @@ public class PANVerification extends BaseVerification {
     @JoinColumn(name = "pan_doc_document_id")
     private PANDoc panDoc;
 
+    //editing this from below
+    @Column(name = "result")
+    private String result;
+
+    @Column(name = "reason")
+    private String reason;
+
+    @Column(name = "pdf_serving_url")
+    private String pdfServingUrl;
+
 
 
 }
