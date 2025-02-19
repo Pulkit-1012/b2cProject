@@ -55,12 +55,20 @@ public class BaseVerificationRestController {
 
 
 
-    @GetMapping("/{userId}/individuals/{individualId}/verify-gdc/{requestId}")
+//    @GetMapping("/{userId}/individuals/{individualId}/verify-gdc/{requestId}")
+//    public ResponseEntity<BaseVerificationResponseDTO> checkGDCVerificationStatus(@PathVariable long userId,
+//                                                                            @PathVariable long individualId,
+//                                                                            @PathVariable long requestId,
+//                                                                             @RequestHeader("Authorization") String token) {
+//        BaseVerificationResponseDTO baseVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, token, requestId);
+//        return ResponseEntity.ok(baseVerificationResponseDTO);
+//    }
+
+    @GetMapping("/{userId}/individuals/{individualId}/verify-gdc")
     public ResponseEntity<BaseVerificationResponseDTO> checkGDCVerificationStatus(@PathVariable long userId,
-                                                                            @PathVariable long individualId,
-                                                                            @PathVariable long requestId,
-                                                                            @RequestHeader("Authorization") String token) {
-        BaseVerificationResponseDTO baseVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, token, requestId);
+                                                                                  @PathVariable long individualId,
+                                                                                  @RequestHeader("Authorization") String token) {
+        BaseVerificationResponseDTO baseVerificationResponseDTO = baseVerificationService.checkGDCVerificationStatus(userId, individualId, token);
         return ResponseEntity.ok(baseVerificationResponseDTO);
     }
 

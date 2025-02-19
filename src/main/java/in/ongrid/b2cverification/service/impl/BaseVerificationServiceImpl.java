@@ -20,6 +20,7 @@ import in.ongrid.b2cverification.model.enums.State;
 import in.ongrid.b2cverification.service.BaseVerificationService;
 import in.ongrid.b2cverification.service.GDCVerificationService;
 import in.ongrid.b2cverification.service.OnGridAPIService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class BaseVerificationServiceImpl implements BaseVerificationService {
 
@@ -135,8 +137,7 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
 
     @Override
-    public BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token,
-                                                                 long requestId) {
+    public BaseVerificationResponseDTO checkGDCVerificationStatus(long userId, long individualId, String token) {
 
         String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
         User user  = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
@@ -149,6 +150,8 @@ public class BaseVerificationServiceImpl implements BaseVerificationService {
 
         if(individual.isEmpty()) throw new ResourceNotFoundException("Individual Not Found");
 
+        Long requestId = baseVerificationRepository.findRequestIdByIndividualId(individualId);
+        log.warn("requestId: {}", requestId);
 
         GDCVerification baseVerification = gdcVerificationRepository.findByRequestId(requestId);
 
