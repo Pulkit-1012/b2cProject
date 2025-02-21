@@ -32,7 +32,7 @@ public class PANDocServiceImpl implements PANDocService {
         panDoc.setPanNumber(panDocDTO.getDocumentUID());
         panDoc.setDocType(DocType.PAN);
 
-        // Call OnGrid API to add PAN Doc
+        // Calling OnGrid API to add PAN Doc
         AddPANDocResponseDTO addPANDocResponseDTO = onGridAPIService.addPANDocument(String.valueOf(individual.getOnGridIndividualId()), panDocDTO);
         panDoc.setOngridId(addPANDocResponseDTO.getId());
 

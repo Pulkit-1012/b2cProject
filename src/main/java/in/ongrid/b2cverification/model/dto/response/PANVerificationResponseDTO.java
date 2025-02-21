@@ -16,7 +16,7 @@ public class PANVerificationResponseDTO {
 
     private int requestId;
     private State state;
-    private PANReportDTO report;
+    private PANReportDTO panReport;
     private String closedReason;
     private String closedRemarks;
     private String created;

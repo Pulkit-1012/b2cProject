@@ -62,7 +62,6 @@ public class BaseVerification extends BaseEntity{
 
 
 
-    //no attribute constructor
 
     public BaseVerification(OfferingType offeringType, State state, int requestId, String closedReason, String closedRemarks, String created, String dataSufficiencyDate, String completedDate, String closed) {
         this.offeringType = offeringType;

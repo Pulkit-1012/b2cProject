@@ -60,10 +60,10 @@ public class DocumentServiceImpl implements DocumentService {
 
         baseverification.setRequestId(panVerificationResponseDTO.getRequestId());
         baseverification.setState(panVerificationResponseDTO.getState());
-        if(panVerificationResponseDTO.getReport()!=null) {
-            baseverification.setReason(panVerificationResponseDTO.getReport().getReason());
-            baseverification.setResult(panVerificationResponseDTO.getReport().getResult());
-            baseverification.setPdfServingUrl(panVerificationResponseDTO.getReport().getPdfServingUrl());
+        if(panVerificationResponseDTO.getPanReport()!=null) {
+            baseverification.setReason(panVerificationResponseDTO.getPanReport().getReason());
+            baseverification.setResult(panVerificationResponseDTO.getPanReport().getResult());
+            baseverification.setPdfServingUrl(panVerificationResponseDTO.getPanReport().getPdfServingUrl());
         }
         baseverification.setClosedReason(panVerificationResponseDTO.getClosedReason());
         baseverification.setOfferingType(OfferingType.PAN);
@@ -107,10 +107,10 @@ public class DocumentServiceImpl implements DocumentService {
         baseVerification.setCompletedDate(panVerificationResponseDTO.getCompletedDate());
         baseVerification.setClosed(panVerificationResponseDTO.getClosedDate());
 
-        if(panVerificationResponseDTO.getReport()!=null) {
-            baseVerification.setReason(panVerificationResponseDTO.getReport().getReason());
-            baseVerification.setResult(panVerificationResponseDTO.getReport().getResult());
-            baseVerification.setPdfServingUrl(panVerificationResponseDTO.getReport().getPdfServingUrl());
+        if(panVerificationResponseDTO.getPanReport()!=null) {
+            baseVerification.setReason(panVerificationResponseDTO.getPanReport().getReason());
+            baseVerification.setResult(panVerificationResponseDTO.getPanReport().getResult());
+            baseVerification.setPdfServingUrl(panVerificationResponseDTO.getPanReport().getPdfServingUrl());
         }
 
 

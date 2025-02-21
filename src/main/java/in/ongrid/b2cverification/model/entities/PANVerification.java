@@ -1,5 +1,6 @@
 package in.ongrid.b2cverification.model.entities;
 
+import in.ongrid.b2cverification.model.enums.Result;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,8 @@ public class PANVerification extends BaseVerification {
 
     //editing this from below
     @Column(name = "result")
-    private String result;
+    @Enumerated(EnumType.STRING)
+    private Result result;
 
     @Column(name = "reason")
     private String reason;

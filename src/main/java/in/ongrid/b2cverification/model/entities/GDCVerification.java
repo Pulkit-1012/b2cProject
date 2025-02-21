@@ -14,6 +14,7 @@ import lombok.*;
 public class GDCVerification extends BaseVerification{
 
     @Column(name = "result")
+    @Enumerated(EnumType.STRING)
     private Result result;
 
     @Column(name = "reason")
