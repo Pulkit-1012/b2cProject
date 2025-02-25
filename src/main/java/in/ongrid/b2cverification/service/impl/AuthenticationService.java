@@ -3,6 +3,7 @@ package in.ongrid.b2cverification.service.impl;
 
 import in.ongrid.b2cverification.config.JwtService;
 import in.ongrid.b2cverification.dao.UserRepository;
+import in.ongrid.b2cverification.exceptions.BadRequestException;
 import in.ongrid.b2cverification.model.dto.AuthenticationRequest;
 import in.ongrid.b2cverification.model.dto.RegisterRequest;
 import in.ongrid.b2cverification.model.dto.response.AuthenticationResponse;
@@ -33,6 +34,7 @@ public class AuthenticationService {
         if(StringUtils.isBlank(registerRequest.getUsername())) throw new UsernameNotFoundException("User name is required to create a user account!");
         else if(StringUtils.isBlank(registerRequest.getPassword())) throw new UsernameNotFoundException("Password is required to create a user account!");
         else if(StringUtils.isBlank(registerRequest.getEmail())) throw new UsernameNotFoundException("Email is required to create a user account!");
+        else if(userRepository.findByEmail(registerRequest.getEmail()).isPresent()) throw new BadRequestException("An account with this email already exists!");
     }
 
 
