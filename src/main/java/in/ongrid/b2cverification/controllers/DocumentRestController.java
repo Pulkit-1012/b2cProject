@@ -1,0 +1,141 @@
+package in.ongrid.b2cverification.controllers;
+
+
+import in.ongrid.b2cverification.config.JwtService;
+import in.ongrid.b2cverification.dao.DocumentRepository;
+import in.ongrid.b2cverification.dao.IndividualRepository;
+import in.ongrid.b2cverification.dao.PANDocRepository;
+import in.ongrid.b2cverification.dao.UserRepository;
+import in.ongrid.b2cverification.exceptions.ResourceNotFoundException;
+import in.ongrid.b2cverification.exceptions.UnauthorizedException;
+import in.ongrid.b2cverification.model.dto.PANDocDTO;
+import in.ongrid.b2cverification.model.dto.response.PANVerificationResponseDTO;
+import in.ongrid.b2cverification.model.entities.Individual;
+import in.ongrid.b2cverification.model.entities.User;
+import in.ongrid.b2cverification.service.DocumentService;
+import in.ongrid.b2cverification.service.PANDocService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/users")
+public class DocumentRestController {
+
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final IndividualRepository individualRepository;
+    private final PANDocService panDocService;
+    private final DocumentRepository documentRepository;
+    private final DocumentService documentService;
+    private final PANDocRepository panDocRepository;
+
+    public DocumentRestController(JwtService jwtService, UserRepository userRepository, IndividualRepository individualRepository, PANDocService panDocService, DocumentRepository documentRepository, DocumentService documentService, PANDocRepository panDocRepository) {
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
+        this.individualRepository = individualRepository;
+        this.panDocService = panDocService;
+        this.documentRepository = documentRepository;
+        this.documentService = documentService;
+        this.panDocRepository = panDocRepository;
+    }
+
+
+    //to add a pan number
+    @PostMapping("/{userId}/individuals/{individualId}/addPan")
+    public ResponseEntity<String> addPan(@PathVariable long userId, @PathVariable long individualId, @RequestHeader("Authorization") String token,@RequestBody PANDocDTO panDocDTO) {
+        String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
+        Optional<Individual> dbIndividual = individualRepository.findById(individualId);
+        Optional<User> dbUser = userRepository.findById(userId);
+
+        if(dbUser.isEmpty()) {
+            throw new ResourceNotFoundException("User not found!");
+        }
+        if(!dbUser.get().getEmail().equals(emailFromToken)) {
+            throw new UnauthorizedException("You do not have permission to add this document!");
+        }
+
+        if(dbIndividual.isEmpty()) {
+            throw new ResourceNotFoundException("Individual not found!");
+        }
+
+        if(!dbIndividual.get().getAddedBy().equals(dbUser.get())) {
+            throw new UnauthorizedException("You do not have permission to add this document!");
+        }
+
+        if(panDocRepository.findPANDocByIndividual(dbIndividual.get())!=null) throw new ResourceNotFoundException("PAN document already exists!");
+
+        panDocService.savePanDoc(dbIndividual.get(), panDocDTO);
+
+        return ResponseEntity.ok("Successfully added PAN document!");
+    }
+
+
+
+    //requesting pan verification
+    @PostMapping("/{userId}/individuals/{individualId}/verify-pan")
+    public ResponseEntity<PANVerificationResponseDTO> requestPANVerification(@PathVariable long userId, @PathVariable long individualId, @RequestHeader("Authorization") String token) {
+
+        String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
+        Optional<Individual> dbIndividual = individualRepository.findById(individualId);
+        Optional<User> dbUser = userRepository.findById(userId);
+
+        if(dbUser.isEmpty()) {
+            throw new ResourceNotFoundException("User not found!");
+        }
+        if(!dbUser.get().getEmail().equals(emailFromToken)) {
+            throw new UnauthorizedException("You do not have permission to add this document!");
+        }
+
+        if(dbIndividual.isEmpty()) {
+            throw new ResourceNotFoundException("Individual not found!");
+        }
+
+        if(!dbIndividual.get().getAddedBy().equals(dbUser.get())) {
+            throw new UnauthorizedException("You do not have permission to add this document!");
+        }
+
+        //getting it through a custom query
+        String documentId = documentRepository.findDocumentIdByIndividualId(individualId);
+
+        PANVerificationResponseDTO panVerificationResponseDTO = documentService.requestingPanVerification(userId, individualId, documentId);
+
+        return ResponseEntity.ok(panVerificationResponseDTO);
+    }
+
+
+
+    @GetMapping("/{userId}/individuals/{individualId}/check-pan/{id}")
+    public ResponseEntity<PANVerificationResponseDTO> checkPANVerificationStatus(@PathVariable long userId,
+                                                                                 @PathVariable long individualId,
+                                                                                 @PathVariable long id,
+                                                                                 @RequestHeader("Authorization") String token) {
+
+        String emailFromToken = jwtService.extractUsername(token.substring(7).trim());
+        Optional<Individual> dbIndividual = individualRepository.findById(individualId);
+        Optional<User> dbUser = userRepository.findById(userId);
+
+        if(dbUser.isEmpty()) {
+            throw new ResourceNotFoundException("User not found!");
+        }
+        if(!dbUser.get().getEmail().equals(emailFromToken)) {
+            throw new UnauthorizedException("You do not have permission to add this document!");
+        }
+
+        if(dbIndividual.isEmpty()) {
+            throw new ResourceNotFoundException("Individual not found!");
+        }
+
+        if(!dbIndividual.get().getAddedBy().equals(dbUser.get())) {
+            throw new UnauthorizedException("You do not have permission to add this document!");
+        }
+
+        PANVerificationResponseDTO panVerificationResponseDTO = documentService.checkPANVerificationStatus(userId, individualId, id, token);
+        return ResponseEntity.ok(panVerificationResponseDTO);
+
+    }
+
+
+
+}
